@@ -8,7 +8,7 @@ const authorSchema = new Schema({
         required:true,
     },
     age:{
-        type:Author,
+        type:String,
         required:true 
     },
     username:String,

@@ -8,7 +8,7 @@ const router = express.Router();
 //get
 router.get('/',async(req,res)=>{
     try{
-        const author = await AuthorModel.find();
+        const authors = await AuthorModel.find();
         res.json(authors);
 
     }catch(err){
@@ -25,8 +25,7 @@ router.get('/:id',getAuthor,(req,res)=>{
 router.post ('/', async(req,res)=>{
     try{
         if (!req.body.name || !req.body.age){
-            return res.status(400).json({message:'Name afe are required'});
-        
+            return res.status(400).json({message:'Name and age are required'});
     }
 
     const existingAuthor = await AuthorModel.findOne({name: req.body.name});
@@ -38,36 +37,35 @@ router.post ('/', async(req,res)=>{
     const newAuthor = await author.save();
     res
     .status(201)
-    .json({message: ' Author created succesfully', author:newAuthor});
+    .json({message: 'Author created succesfully', author:newAuthor});
     }catch(err){
         res.status(400).json({message:err.message});
     }
 });
 
 //update
-
 router.patch ('/:id', getAuthor,async (req,res)=>{
     try{
-        if (req.body.name = null ){
+        if (req.body.name != null ){
             res.author.name = req.body.name;
         }
         const updateAuthor = await res.author.save();
-        res.json(updatedAuthor);
+        res.json(updateAuthor);
     }catch (err){
-        res.status(400).json({message: res.author.save});
+        res.status(400).json({message: err.message});
     }
 });
 
-router.put ('/:id',getauthor, async(req,res)=>{
+router.put ('/:id',getAuthor, async(req,res)=>{
     try{
         const updateAuthor = await AuthorModel.findByIdAndUpdate(
             req.params.id,
-            res.body,
+            req.body,   
             {new:true}
         );
-        res.json(updatedAuthor);
+        res.json(updateAuthor);
     }catch (err){
-        res.status(400).json({message:err.message});
+        res.status(400).json({message: err.message});
     }
 });
 
@@ -76,7 +74,7 @@ router.put ('/:id',getauthor, async(req,res)=>{
 
 router.delete('/:id', getAuthor, async(req,res)=>{
     try{
-        await AuthorModel.findByIdAndDelete(req.param.id);
+        await AuthorModel.findByIdAndDelete(req.params.id);
         res.json ({message:'Author deleted'});
     }catch (err){
         res.status (500).json({message: err.message});
@@ -96,4 +94,4 @@ async function getAuthor(req, res, next) {
     }
 }
 
- module.exports =router
+ module.exports = router;
